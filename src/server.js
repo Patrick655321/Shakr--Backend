@@ -1,7 +1,7 @@
 require ("dotenv").config()
 const express = require("express")
 const mongoose = require("mongoose")
-
+const axios = require("axios")
 
 const mongoURI = process.env.MONGO_URI
 mongoose.connect(mongoURI)
@@ -15,8 +15,11 @@ mongoose.connect(mongoURI)
 
 const app = express();
 
+
 app.use(express.json());
 app.use(express.urlencoded({extended: true}))
+
+
 
 const PORT = process.env.PORT || 5000
 
@@ -24,7 +27,9 @@ app.get("/", (req, res) => {
     res.send("Welcome to my API")
 })
 
-app.use(require("./routes"))
+app.use(require("./routes/userRoutes"))
+app.use(require("./routes/drinkRoutes"))
+app.use(require("./routes/returnModsRoutes"))
 
 app.listen(PORT, () => {
     console.log("Server Started")

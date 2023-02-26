@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
-const User = require("../models/User")
+const User = require("../models/user")
 
 async function loginAdmin(req, res) {
     const {email, password} = req.body
@@ -20,13 +20,13 @@ async function loginAdmin(req, res) {
     }
 }
 
-let password = "password"
-bcrypt.hash(password, 10, (err, hash) => {
-    if(err) {
-        console.log(err)
-    }
-    console.log(hash)
-})
+// let password = "password"
+// bcrypt.hash(password, 10, (err, hash) => {
+//     if(err) {
+//         console.log(err)
+//     }
+//     console.log(hash)
+// })
 
 module.exports = {
     loginAdmin

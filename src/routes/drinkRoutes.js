@@ -1,7 +1,7 @@
 const express = require("express")
 
 const drinkRouter = express.Router();
-const { getAllDrinks, getDrinkByName, getDrinkByBase, getDrinkByDanger, getDrinkByNonAlc, getDrinkByFruity } =  require("../controllers/drinkController")
+const { getAllDrinks, getDrinkByName, getDrinkByBase, getDrinkByDanger, getDrinkByNonAlc, getDrinkByFruity, getDrinkById } =  require("../controllers/drinkController")
 const { authenticateToken } = require("../middleware/auth")
 
 
@@ -12,6 +12,7 @@ drinkRouter.get("/drinks/base/:drinkBase", getDrinkByBase)
 drinkRouter.get("/drinks/danger", getDrinkByDanger)
 drinkRouter.get("/drinks/non-alc", getDrinkByNonAlc)
 drinkRouter.get("/drinks/fruity", getDrinkByFruity)
+drinkRouter.get("/drinks/Id/:Id", getDrinkById)
 
 
 module.exports = drinkRouter

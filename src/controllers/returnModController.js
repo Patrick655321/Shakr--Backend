@@ -28,6 +28,8 @@ async function rebrandSpirit(req, res) {
   }
 }
 
+
+
 module.exports = {
   rebrandSpirit,
   getProducts

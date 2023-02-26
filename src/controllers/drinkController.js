@@ -3,7 +3,7 @@ const ReturnMods = require("../models/returnMods");
 const mongoose = require("mongoose");
 const { response } = require("express");
 
-// const Recipe = require("../models/recipe")
+const Randomizer = require("../utils/randomizer")
 
 async function getAllDrinks(req, res) {
   let apiURL =
@@ -24,6 +24,33 @@ async function getDrinkByName(req, res) {
     let apiResponse = await axios.get(apiURL);
     const products = await ReturnMods.find({});
 
+    const modifiedResponse = apiResponse.data.drinks.map((drink) => {
+      for (const keyProd in products[0]) {
+        for (const drinkKey in drink) {
+          if (keyProd.toLowerCase() == `${drink[drinkKey]}`.toLowerCase()) {
+            if (
+              drink[drinkKey].toLowerCase() !=
+              products[0][keyProd].toLowerCase()
+            ) {
+              drink[drinkKey] = products[0][keyProd];
+            }
+          }
+        }
+      }
+      return drink;
+    });
+    res.send(modifiedResponse);
+  } catch (err) {
+    console.error("Error fetching Data:", err);
+    res.status(500).send("Error fetching data");
+  }
+}
+
+async function getDrinkById(req, res) {
+  try {
+    let apiURL = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${req.params.Id}`;
+    let apiResponse = await axios.get(apiURL);
+    const products = await ReturnMods.find({});
     const modifiedResponse = apiResponse.data.drinks.map((drink) => {
       for (const keyProd in products[0]) {
         for (const drinkKey in drink) {
@@ -87,6 +114,8 @@ async function getDrinkByNonAlc(req, res) {
     });
 }
 
+
+
 async function getDrinkByFruity(req, res) {
   const fruitUrlList = ["https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=Watermelon",
                 "https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=Grapefruit_juice",
@@ -103,13 +132,19 @@ async function getDrinkByFruity(req, res) {
                 "https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=Midori_melon_liqueur",
                 "https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=Creme_de_Cassis"
   ]
+  try {
   let fruityDrinks = [];
   for(const url of fruitUrlList) {
     const apiResponse = await axios.get(url);
     fruityDrinks.push(...apiResponse.data.drinks);
     }
-  res.json(fruityDrinks)
+  let randomTenList = Randomizer(fruityDrinks)
+  res.json(randomTenList)
+  } catch (err) {
+    console.log("Error returning drinks")
+    res.status(500).json({message: "Error returning drinks"})
   }
+}  
 
 
 module.exports = {
@@ -118,5 +153,6 @@ module.exports = {
   getDrinkByBase,
   getDrinkByDanger,
   getDrinkByNonAlc,
-  getDrinkByFruity
+  getDrinkByFruity,
+  getDrinkById
 };

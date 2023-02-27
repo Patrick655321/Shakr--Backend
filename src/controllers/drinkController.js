@@ -114,8 +114,6 @@ async function getDrinkByNonAlc(req, res) {
     });
 }
 
-
-
 async function getDrinkByFruity(req, res) {
   const fruitUrlList = ["https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=Watermelon",
                 "https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=Grapefruit_juice",
@@ -146,7 +144,7 @@ async function getDrinkByFruity(req, res) {
   }
 } 
 
-async function getDrinkByfizzy(req, res) {
+async function getDrinkByFizzy(req, res) {
   const fizzUrlList = ["https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=Champagne",
                 "https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=Carbonated_water",
                 "https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=Lemonade",
@@ -170,15 +168,44 @@ async function getDrinkByfizzy(req, res) {
     console.log("Error returning drinks")
     res.status(500).json({message: "Error returning drinks"})
   }
-}  
+}
+
+async function getDrinkByHeavy(req, res) {
+  let ApiUrl = "https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail";
+  try {
+    let listAllDrinks = [];
+    let heavyList = [];
+    const apiResponse = await axios.get(ApiUrl)
+    listAllDrinks.push(...apiResponse.data.drinks)
+  for (const drink of listAllDrinks) {
+    let idUrl = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${drink.idDrink}`;
+    let idUrlResponse = await axios.get(idUrl)
+    for(ingredients in idUrlResponse.data.drinks[0]) {
+      spiritList = ['Vodka', 'Gin', 'Cachaca', 'Aperol', 'Tequila', 'Light rum', 'Dark Rum', 'Scotch', 'Bourbon', 'Brandy', 'Blended Whiskey', 'Rum', 'Cognac', 'Whiskey', 'Pisco']
+      for (let j = 0; j < spiritList.length; j++) {
+    if(idUrlResponse.data.drinks[0].strIngredient4 === null && Object.values(idUrlResponse.data.drinks[0]).includes(spiritList[j]) && !heavyList.includes(idUrlResponse.data.drinks[0])) {
+      heavyList.push(idUrlResponse.data.drinks[0])
+    }}
+    // Object.values(drink).includes('bourbon'||'gin') && 
+  }
+}
+    let randomTenList = Randomizer(heavyList)
+    res.json(randomTenList)
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({message: "sucks to be you"})
+  }
+}
 
 
 module.exports = {
   getAllDrinks,
   getDrinkByName,
+  getDrinkByFizzy,
   getDrinkByBase,
   getDrinkByDanger,
   getDrinkByNonAlc,
   getDrinkByFruity,
+  getDrinkByHeavy,
   getDrinkById
 };

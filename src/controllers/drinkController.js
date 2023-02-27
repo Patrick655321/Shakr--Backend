@@ -144,6 +144,32 @@ async function getDrinkByFruity(req, res) {
     console.log("Error returning drinks")
     res.status(500).json({message: "Error returning drinks"})
   }
+} 
+
+async function getDrinkByfizzy(req, res) {
+  const fizzUrlList = ["https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=Champagne",
+                "https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=Carbonated_water",
+                "https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=Lemonade",
+                "https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=Sprite",
+                "https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=7-Up",
+                "https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=coca-cola",
+                "https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=soda_water",
+                "https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=prosecco",
+                "https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=ginger_beer",
+                "https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=Club_soda",
+  ]
+  try {
+  let fizzyDrinks = [];
+  for(const url of fizzUrlList) {
+    const apiResponse = await axios.get(url);
+    fizzyDrinks.push(...apiResponse.data.drinks);
+    }
+  let randomTenList = Randomizer(fizzyDrinks)
+  res.json(randomTenList)
+  } catch (err) {
+    console.log("Error returning drinks")
+    res.status(500).json({message: "Error returning drinks"})
+  }
 }  
 
 

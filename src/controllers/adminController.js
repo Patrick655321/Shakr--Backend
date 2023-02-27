@@ -20,14 +20,6 @@ async function loginAdmin(req, res) {
     }
 }
 
-// let password = "password"
-// bcrypt.hash(password, 10, (err, hash) => {
-//     if(err) {
-//         console.log(err)
-//     }
-//     console.log(hash)
-// })
-
 module.exports = {
     loginAdmin
 }

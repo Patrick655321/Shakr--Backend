@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 
-const ReturnModsSchema = new mongoose.Schema({
+const ReturnModSchema = new mongoose.Schema({
     vodka: String,
     white_rum: String,
     dark_rum: String,
@@ -11,6 +11,6 @@ const ReturnModsSchema = new mongoose.Schema({
     do_not_return: Array
 })
 
-const ReturnMods = mongoose.model("return_mods", ReturnModsSchema)
+const ReturnMod = mongoose.model("return_mod", ReturnModSchema)
 
-module.exports = ReturnMods
+module.exports = ReturnMod

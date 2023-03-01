@@ -1,7 +1,7 @@
 const axios = require("axios");
 const mongoose = require("mongoose");
 const { response } = require("express");
-const {removeForbidden} = require("../utils/filterFunctionality")
+const { removeForbidden } = require("../utils/filterFunctionality");
 
 const Randomizer = require("../utils/randomizer");
 
@@ -176,47 +176,48 @@ async function getDrinkByFizzy(req, res) {
 }
 
 async function getDrinkByHeavy(req, res) {
-  let ApiUrl =
+  const apiUrl =
     "https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail";
+  const spiritList = [
+    "Vodka",
+    "Gin",
+    "Cachaca",
+    "Aperol",
+    "Tequila",
+    "Light rum",
+    "Dark Rum",
+    "Scotch",
+    "Bourbon",
+    "Brandy",
+    "Blended Whiskey",
+    "Rum",
+    "Cognac",
+    "Whiskey",
+    "Pisco",
+  ];
+
   try {
-    let listAllDrinks = [];
-    let heavyList = [];
-    const apiResponse = await axios.get(ApiUrl);
-    listAllDrinks.push(...apiResponse.data.drinks);
-    for (const drink of listAllDrinks) {
-      let idUrl = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${drink.idDrink}`;
-      let idUrlResponse = await axios.get(idUrl);
-      for (ingredients in idUrlResponse.data.drinks[0]) {
-        spiritList = [
-          "Vodka",
-          "Gin",
-          "Cachaca",
-          "Aperol",
-          "Tequila",
-          "Light rum",
-          "Dark Rum",
-          "Scotch",
-          "Bourbon",
-          "Brandy",
-          "Blended Whiskey",
-          "Rum",
-          "Cognac",
-          "Whiskey",
-          "Pisco",
-        ];
-        for (let j = 0; j < spiritList.length; j++) {
-          if (
-            idUrlResponse.data.drinks[0].strIngredient4 === null &&
-            Object.values(idUrlResponse.data.drinks[0]).includes(
-              spiritList[j]
-            ) &&
-            !heavyList.includes(idUrlResponse.data.drinks[0])
-          ) {
-            heavyList.push(idUrlResponse.data.drinks[0]);
-          }
-        }
-      }
-    }
+    // Get all cocktail drinks
+    const apiResponse = await axios.get(apiUrl);
+    const listAllDrinks = apiResponse.data.drinks;
+
+    // Extract drink IDs
+    const drinkIds = listAllDrinks.map((drink) => drink.idDrink);
+    const allDrinks = await Promise.all(
+      drinkIds.map((id) => axios.get(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`))
+    )
+      .then((responses) => responses.map((response) => response.data.drinks))
+      .then((drinkArrays) => drinkArrays.flat());
+    // 
+
+    // Filter drinks that contain any of the specified spirits and do not contain strIngredient4
+    const heavyList = allDrinks.filter((drink) => {
+      return (
+        !drink.strIngredient4 &&
+        spiritList.some((spirit) => Object.values(drink).includes(spirit))
+      );
+    });
+
     let randomTenList = Randomizer(heavyList);
     res.json(randomTenList);
   } catch (err) {
@@ -225,13 +226,115 @@ async function getDrinkByHeavy(req, res) {
   }
 }
 
+// async function getDrinkByHeavy(req, res) {
+//   const apiUrl =
+//     "https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail";
+//   const spiritList = [
+//     "Vodka",
+//     "Gin",
+//     "Cachaca",
+//     "Aperol",
+//     "Tequila",
+//     "Light rum",
+//     "Dark Rum",
+//     "Scotch",
+//     "Bourbon",
+//     "Brandy",
+//     "Blended Whiskey",
+//     "Rum",
+//     "Cognac",
+//     "Whiskey",
+//     "Pisco",
+//   ];
+
+//   try {
+//     // Get all cocktail drinks
+//     const apiResponse = await axios.get(apiUrl);
+//     const listAllDrinks = apiResponse.data.drinks;
+
+//     // Extract drink IDs
+//     const drinkIds = listAllDrinks.map((drink) => drink.idDrink);
+//     let allDrinks = [];
+//     for (const id of drinkIds) {
+//       const lookupUrl = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`;
+//       const lookupResponse = await axios.get(lookupUrl);
+//       allDrinks.push(...lookupResponse.data.drinks);
+//     }
+//     // }
+
+//     // Filter drinks that contain any of the specified spirits and do not contain strIngredient4
+//     const heavyList = allDrinks.filter((drink) => {
+//       return (
+//         !drink.strIngredient4 &&
+//         spiritList.some((spirit) => Object.values(drink).includes(spirit))
+//       );
+//     });
+
+//     let randomTenList = Randomizer(heavyList);
+//     res.json(randomTenList);
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).json({ message: "sucks to be you" });
+//   }
+// }
+
+// async function getDrinkByHeavy(req, res) {
+//   let ApiUrl =
+//     "https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail";
+//   try {
+//     let listAllDrinks = [];
+//     let heavyList = [];
+//     const apiResponse = await axios.get(ApiUrl);
+//     listAllDrinks.push(...apiResponse.data.drinks);
+//     for (const drink of listAllDrinks) {
+//       let idUrl = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${drink.idDrink}`;
+//       let idUrlResponse = await axios.get(idUrl);
+//       for (ingredients in idUrlResponse.data.drinks[0]) {
+//         spiritList = [
+//           "Vodka",
+//           "Gin",
+//           "Cachaca",
+//           "Aperol",
+//           "Tequila",
+//           "Light rum",
+//           "Dark Rum",
+//           "Scotch",
+//           "Bourbon",
+//           "Brandy",
+//           "Blended Whiskey",
+//           "Rum",
+//           "Cognac",
+//           "Whiskey",
+//           "Pisco",
+//         ];
+//         for (let j = 0; j < spiritList.length; j++) {
+//           if (
+//             idUrlResponse.data.drinks[0].strIngredient4 === null &&
+//             Object.values(idUrlResponse.data.drinks[0]).includes(
+//               spiritList[j]
+//             ) &&
+//             !heavyList.includes(idUrlResponse.data.drinks[0])
+//           ) {
+//             heavyList.push(idUrlResponse.data.drinks[0]);
+//           }
+//         }
+//       }
+//     }
+//     let randomTenList = Randomizer(heavyList);
+//     res.json(randomTenList);
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).json({ message: "sucks to be you" });
+//   }
+// }
+
 async function getDrinkByMum(req, res) {
   let apiUrl = `http://www.thecocktaildb.com/api/json/v1/1/search.php?f=m`;
   try {
     let mumDrinks = [];
     const apiResponse = await axios.get(apiUrl);
     mumDrinks.push(...apiResponse.data.drinks);
-    removeForbidden(mumDrinks)
+    removeForbidden(mumDrinks);
     res.status(200).json(mumDrinks);
   } catch (err) {
     console.log("Error returning drinks");
@@ -249,5 +352,5 @@ module.exports = {
   getDrinkByFruity,
   getDrinkByHeavy,
   getDrinkById,
-  getDrinkByMum
+  getDrinkByMum,
 };

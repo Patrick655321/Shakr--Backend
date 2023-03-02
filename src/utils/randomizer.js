@@ -1,9 +1,24 @@
+const ReturnMod = require("../models/returnMods")
+
 function randomizer(array) {
   const randomIndex = Math.floor(Math.random() * array.length);
   return randomIndex;
 }
 
-function getRandomTen(array) {
+async function takeForbidden(array) {
+  const result = await ReturnMod.find({})
+  const forbidden = await result[0].forbidden
+  const allowed = array.filter((i) => {
+    return !forbidden.includes(i.strDrink)
+  })
+  return allowed
+}
+
+
+
+async function getRandomTen(array) {
+  const newArray = await takeForbidden(array)
+  console.log(newArray)
   if (array.length < 10) {
     return array;
   }

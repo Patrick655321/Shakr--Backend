@@ -1,7 +1,6 @@
 const axios = require("axios");
 const mongoose = require("mongoose");
 const { response } = require("express");
-const { removeForbidden } = require("../utils/filterFunctionality");
 
 const Randomizer = require("../utils/randomizer");
 
@@ -82,7 +81,7 @@ async function getDrinkByBase(req, res) {
     let randomTenList = Randomizer(baseDrinks);
     res.status(200).json(randomTenList);
   } catch (err) {
-    console.log("Error returning drinks");
+    console.log(err);
     res.status(500).json({ message: "Error returning drinks" });
   }
 }
@@ -217,7 +216,7 @@ async function getDrinkByHeavy(req, res) {
         spiritList.some((spirit) => Object.values(drink).includes(spirit))
       );
     });
-
+// Randomizer functionality to return random 10
     let randomTenList = Randomizer(heavyList);
     res.json(randomTenList);
   } catch (err) {

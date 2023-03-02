@@ -8,9 +8,9 @@ const ReturnModSchema = new mongoose.Schema({
     bourbon: String,
     tequila: String,
     gin: String,
-    do_not_return: Array
+    forbidden: Array
 })
 
-const ReturnMod = mongoose.model("return_mod", ReturnModSchema)
+const ReturnMod = mongoose.model("return_mods", ReturnModSchema)
 
 module.exports = ReturnMod

@@ -1,5 +1,7 @@
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
+const moment = require("moment")
+
 const User = require("../models/user")
 
 async function loginAdmin(req, res) {
@@ -19,7 +21,17 @@ async function loginAdmin(req, res) {
         res.status(500).json({message: "Internal server error, please try again"})
     }
 }
+function checkAge(req, res) {
+    const dob = moment(req.body.dob);
+    const age = moment().diff(dob, 'years');
 
+    if(age < 18) {
+        res.status(403).json({message:"Thank you for your honesty, please return when you are 18 or over!"})
+    } else {
+        res.status(200).json({message: "Age verified, enjoy your drinks!"})
+    }
+}
 module.exports = {
-    loginAdmin
+    loginAdmin,
+    checkAge
 }

@@ -1,4 +1,4 @@
-const ReturnMod = require("../models/returnMods")
+const ReturnMod = require("../models/ReturnMods")
 
 function randomizer(array) {
   const randomIndex = Math.floor(Math.random() * array.length);
@@ -16,7 +16,7 @@ async function takeForbidden(array) {
 
 async function getRandomTen(array) {
   const newArray = await takeForbidden(array)
-  console.log(newArray)
+  // console.log(newArray)
   if (array.length < 10) {
     return array;
   }

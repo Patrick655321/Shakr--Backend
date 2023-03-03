@@ -1,4 +1,4 @@
-const ReturnMod = require("../models/returnMods");
+const ReturnMod = require("../models/ReturnMods");
 
 async function getProducts(req, res) {
     try {
@@ -45,9 +45,9 @@ async function addToForbidden(req, res) {
 
 async function removeForbiddenItem (req, res) {
   const { drink } = req.body;
-  const query = { _id: "63f88181b7c64bc89b59351c" }; // query to find the return_mods document by its _id
-  const update = { $pull: { forbidden: drink } }; // update operation to remove the drink from the forbidden array
-  const options = { new: true }; // optional options object to return the updated document instead of the original
+  const query = { _id: "63f88181b7c64bc89b59351c" };
+  const update = { $pull: { forbidden: drink } };
+  const options = { new: true };
 
   try {
     const updatedReturnMods = await ReturnMod.findOneAndUpdate(query, update, options);

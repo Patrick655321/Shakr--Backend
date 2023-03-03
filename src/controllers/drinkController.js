@@ -1,8 +1,8 @@
 const axios = require("axios");
-const mongoose = require("mongoose");
-const { response } = require("express");
+const ReturnMod = require("../models/returnMods");
 
 const Randomizer = require("../utils/randomizer");
+const modifyResponse = require("../utils/modifyResponse");
 
 async function getAllDrinks(req, res) {
   let apiURL =
@@ -21,23 +21,23 @@ async function getDrinkByName(req, res) {
   try {
     let apiURL = `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${req.params.drinkName}`;
     let apiResponse = await axios.get(apiURL);
-    const products = await FilterList.find({});
-
-    const modifiedResponse = apiResponse.data.drinks.map((drink) => {
-      for (const keyProd in products[0]) {
-        for (const drinkKey in drink) {
-          if (keyProd.toLowerCase() == `${drink[drinkKey]}`.toLowerCase()) {
-            if (
-              drink[drinkKey].toLowerCase() !=
-              products[0][keyProd].toLowerCase()
-            ) {
-              drink[drinkKey] = products[0][keyProd];
-            }
-          }
-        }
-      }
-      return drink;
-    });
+    const products = await ReturnMod.find({});
+    const modifiedResponse = await modifyResponse(apiResponse)
+    // const modifiedResponse = apiResponse.data.drinks.map((drink) => {
+    //   for (const keyProd in products[0]) {
+    //     for (const drinkKey in drink) {
+    //       if (keyProd.toLowerCase() == `${drink[drinkKey]}`.toLowerCase()) {
+    //         if (
+    //           drink[drinkKey].toLowerCase() !=
+    //           products[0][keyProd].toLowerCase()
+    //         ) {
+    //           drink[drinkKey] = products[0][keyProd];
+    //         }
+    //       }
+    //     }
+    //   }
+    //   return drink;
+    // });
     res.send(modifiedResponse);
   } catch (err) {
     console.error("Error fetching Data:", err);
@@ -49,22 +49,8 @@ async function getDrinkById(req, res) {
   try {
     let apiURL = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${req.params.Id}`;
     let apiResponse = await axios.get(apiURL);
-    const products = await FilterList.find({});
-    const modifiedResponse = apiResponse.data.drinks.map((drink) => {
-      for (const keyProd in products[0]) {
-        for (const drinkKey in drink) {
-          if (keyProd.toLowerCase() == `${drink[drinkKey]}`.toLowerCase()) {
-            if (
-              drink[drinkKey].toLowerCase() !=
-              products[0][keyProd].toLowerCase()
-            ) {
-              drink[drinkKey] = products[0][keyProd];
-            }
-          }
-        }
-      }
-      return drink;
-    });
+    const products = await ReturnMod.find({});
+    const modifiedResponse = await modifyResponse(apiResponse);
     res.send(modifiedResponse);
   } catch (err) {
     console.error("Error fetching Data:", err);

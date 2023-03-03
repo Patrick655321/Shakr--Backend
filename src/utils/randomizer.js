@@ -14,8 +14,6 @@ async function takeForbidden(array) {
   return allowed
 }
 
-
-
 async function getRandomTen(array) {
   const newArray = await takeForbidden(array)
   console.log(newArray)

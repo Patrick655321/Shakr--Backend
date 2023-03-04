@@ -3,6 +3,7 @@ const ReturnMod = require("../models/ReturnMods");
 
 const Randomizer = require("../utils/randomizer");
 const modifyResponse = require("../utils/modifyResponse");
+const extrapDetails = require("../utils/extrapDetails");
 
 async function getAllDrinks(req, res) {
   let apiURL =
@@ -22,8 +23,9 @@ async function getDrinkByName(req, res) {
     let apiURL = `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${req.params.drinkName}`;
     let apiResponse = await axios.get(apiURL);
     const products = await ReturnMod.find({});
-    const modifiedResponse = await modifyResponse(apiResponse)
-    res.send(modifiedResponse);
+    const modifiedResponse = await modifyResponse(apiResponse);
+    const results = extrapDetails(modifiedResponse);
+    res.send(results);
   } catch (err) {
     console.error("Error fetching Data:", err);
     res.status(500).send("Error fetching data");
@@ -51,7 +53,7 @@ async function getDrinkByBase(req, res) {
     const apiResponse = await axios.get(apiUrl);
     baseDrinks.push(...apiResponse.data.drinks);
     let randomTenList = await Randomizer(baseDrinks);
-    console.log(randomTenList)
+    // console.log(randomTenList)
     res.status(200).json(randomTenList);
   } catch (err) {
     console.log(err);
@@ -176,11 +178,15 @@ async function getDrinkByHeavy(req, res) {
     // Extract drink IDs
     const drinkIds = listAllDrinks.map((drink) => drink.idDrink);
     const allDrinks = await Promise.all(
-      drinkIds.map((id) => axios.get(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`))
+      drinkIds.map((id) =>
+        axios.get(
+          `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`
+        )
+      )
     )
       .then((responses) => responses.map((response) => response.data.drinks))
       .then((drinkArrays) => drinkArrays.flat());
-    // 
+    //
 
     // Filter drinks that contain any of the specified spirits and do not contain strIngredient4 & include spirit from spirits list
     const heavyList = allDrinks.filter((drink) => {
@@ -189,7 +195,7 @@ async function getDrinkByHeavy(req, res) {
         spiritList.some((spirit) => Object.values(drink).includes(spirit))
       );
     });
-// Randomizer functionality to return random 10
+    // Randomizer functionality to return random 10
     let randomTenList = await Randomizer(heavyList);
     res.json(randomTenList);
   } catch (err) {

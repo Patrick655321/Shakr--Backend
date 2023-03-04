@@ -1,20 +1,38 @@
-function extrapDetails(fullDrinks) {
-const results = fullDrinks.map((drink) => {
-    const { strDrink, strInstructions, strDrinkThumb, ...ingredients} = drink
-  const filteredIngredients = Object.fromEntries(
-    Object.entries(ingredients)
-    .filter(([key, value]) => (key.includes('strIngredient') && value != null) || (key.includes('strMeasure') && value != null))
-    )
+const axios = require("axios")
 
-    const result = {
+async function extrapDetails(initialArray) {
+  // Extract drink IDs
+  const drinkIds = initialArray.map((drink) => drink.idDrink);
+
+  // Fetch details for each drink ID
+  const allDrinks = await Promise.all(
+    drinkIds.map((id) =>
+      axios.get(
+        `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`
+      )
+    )
+  ).then((responses) => responses.map((response) => response.data.drinks)).then((drinkArrays) => drinkArrays.flat());
+
+  // Merge details into new objects
+  const results = initialArray.map((drink) => {
+    const details = allDrinks.find((d) => d.idDrink === drink.idDrink);
+    const { strDrink, strInstructions, strDrinkThumb } = drink;
+    const filteredIngredients = Object.fromEntries(
+      Object.entries(details)
+        .filter(
+          ([key, value]) =>
+            (key.includes('strIngredient') && value != null) || (key.includes('strMeasure') && value != null)
+        )
+    );
+    return {
       strDrink,
       strInstructions,
       strDrinkThumb,
-      ...filteredIngredients
-    }
-    return result
-  })
-  return results
+      ...filteredIngredients,
+    };
+  });
+
+  return results;
 }
 
 module.exports = extrapDetails

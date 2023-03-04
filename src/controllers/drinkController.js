@@ -53,8 +53,9 @@ async function getDrinkByBase(req, res) {
     const apiResponse = await axios.get(apiUrl);
     baseDrinks.push(...apiResponse.data.drinks);
     let randomTenList = await Randomizer(baseDrinks);
-    // console.log(randomTenList)
-    res.status(200).json(randomTenList);
+    console.log(randomTenList)
+    const results = await extrapDetails(randomTenList)
+    res.status(200).json(results);
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Error returning drinks" });

@@ -21,7 +21,7 @@ async function extrapDetails(initialArray) {
       Object.entries(details)
         .filter(
           ([key, value]) =>
-            (key.includes('strIngredient') && value != null) || (key.includes('strMeasure') && value != null)
+            (key.includes('strIngredient') && value != null) || (key.includes('strMeasure') && value != null && value != "" || key === "strInstructions")
         )
     );
     return {

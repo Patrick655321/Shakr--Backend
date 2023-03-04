@@ -24,7 +24,7 @@ async function getDrinkByName(req, res) {
     let apiResponse = await axios.get(apiURL);
     const products = await ReturnMod.find({});
     const modifiedResponse = await modifyResponse(apiResponse);
-    const results = extrapDetails(modifiedResponse);
+    const results = await extrapDetails(modifiedResponse);
     res.send(results);
   } catch (err) {
     console.error("Error fetching Data:", err);
@@ -70,7 +70,8 @@ async function getDrinkByDanger(req, res) {
     const apiResponse = await axios.get(apiUrl);
     dangerDrinks.push(...apiResponse.data.drinks);
     let randomTenList = await Randomizer(dangerDrinks);
-    res.status(200).json(randomTenList);
+    const results = await extrapDetails(randomTenList)
+    res.status(200).json(results);
   } catch (err) {
     console.log("Error returning drinks");
     res.status(500).json({ message: "Error returning drinks" });
@@ -85,7 +86,8 @@ async function getDrinkByNonAlc(req, res) {
     const apiResponse = await axios.get(apiUrl);
     dangerDrinks.push(...apiResponse.data.drinks);
     let randomTenList = await Randomizer(dangerDrinks);
-    res.status(200).json(randomTenList);
+    const results = await extrapDetails(randomTenList)
+    res.status(200).json(results);
   } catch (err) {
     console.log("Error returning drinks");
     res.status(500).json({ message: "Error returning drinks" });
@@ -116,7 +118,8 @@ async function getDrinkByFruity(req, res) {
       fruityDrinks.push(...apiResponse.data.drinks);
     }
     let randomTenList = await Randomizer(fruityDrinks);
-    res.status(200).json(randomTenList);
+    const results = await extrapDetails(randomTenList)
+    res.status(200).json(results);
   } catch (err) {
     console.log("Error returning drinks");
     res.status(500).json({ message: "Error returning drinks" });
@@ -143,7 +146,8 @@ async function getDrinkByFizzy(req, res) {
       fizzyDrinks.push(...apiResponse.data.drinks);
     }
     let randomTenList = await Randomizer(fizzyDrinks);
-    res.json(randomTenList);
+    const results = await extrapDetails(randomTenList)
+    res.status(200).json(results);
   } catch (err) {
     console.log("Error returning drinks");
     res.status(500).json({ message: "Error returning drinks" });
@@ -198,7 +202,8 @@ async function getDrinkByHeavy(req, res) {
     });
     // Randomizer functionality to return random 10
     let randomTenList = await Randomizer(heavyList);
-    res.json(randomTenList);
+    const results = await extrapDetails(randomTenList)
+    res.status(200).json(results);
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "sucks to be you" });
@@ -212,7 +217,8 @@ async function getDrinkByMum(req, res) {
     const apiResponse = await axios.get(apiUrl);
     mumDrinks.push(...apiResponse.data.drinks);
     const newMum = mumDrinks;
-    res.status(200).json(newMum);
+    const results = await extrapDetails(newMum)
+    res.status(200).json(results);
   } catch (err) {
     console.log("Error returning drinks");
     res.status(500).json({ message: "Error returning drinks" });

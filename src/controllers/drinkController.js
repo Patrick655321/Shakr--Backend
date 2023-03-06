@@ -119,6 +119,7 @@ async function getDrinkByFruity(req, res) {
     }
     let randomTenList = await Randomizer(fruityDrinks);
     const results = await extrapDetails(randomTenList)
+    console.log(results)
     res.status(200).json(results);
   } catch (err) {
     console.log("Error returning drinks");

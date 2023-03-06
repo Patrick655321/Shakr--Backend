@@ -1,7 +1,7 @@
 require ("dotenv").config()
 const express = require("express")
 const mongoose = require("mongoose")
-const axios = require("axios")
+const cors = require("cors")
 
 const mongoURI = process.env.MONGO_URI
 mongoose.connect(mongoURI)
@@ -16,6 +16,13 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}))
+
+const corsOption = {
+    origin: ["http://localhost:3000"], //Origin that we want to accept (our frontend)
+    optionSuccessStatus: 200
+}
+
+app.use(cors(corsOption))
 
 const PORT = process.env.PORT || 5000
 

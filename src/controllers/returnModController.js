@@ -9,11 +9,23 @@ async function getProducts(req, res) {
     }
 }
 
+// async function rebrandSpirit(req, res) {
+//   try {
+//     const { brand, value } = req.body;
+//     const updatedProduct = await ReturnMod.findByIdAndUpdate(req.params.id, {
+//       [brand]: value,
+//     });
+//     res.json(updatedProduct);
+//   } catch (err) {
+//     res.status(500).json({message: "Error occured"});
+//   }
+// }
+
 async function rebrandSpirit(req, res) {
   try {
     const { vodka, white_rum, dark_rum, scotch, bourbon, tequila, gin } =
       req.body;
-    const updatedProduct = await ReturnMod.findByIdAndUpdate(req.params.id, {
+    const updatedProduct = await ReturnMod.findByIdAndUpdate(req.params.id.trim(), {
       vodka,
       white_rum,
       dark_rum,
@@ -24,6 +36,7 @@ async function rebrandSpirit(req, res) {
     });
     res.json(updatedProduct);
   } catch (err) {
+    console.log(err)
     res.status(500).json({message: "Error occured"});
   }
 }

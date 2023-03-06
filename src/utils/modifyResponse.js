@@ -4,7 +4,7 @@ const ReturnMod = require("../models/ReturnMods");
 
 async function modifyResponse(apiResponse) {
     const products = await ReturnMod.find({});
-    // console.log(apiResponse)
+    // console.log(apiResponse.data.drinks)
     const modifiedResponse = apiResponse.map((drink) => {
         for (const keyProd in products[0]) {
           for (const drinkKey in drink) {

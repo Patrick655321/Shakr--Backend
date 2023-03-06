@@ -19,11 +19,12 @@ async function getAllDrinks(req, res) {
 }
 
 async function getDrinkByName(req, res) {
+  req.params.drinkName = req.params.drinkName.replace(/ /g, '_');
+  const apiURL = `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${req.params.drinkName}`;
   try {
-    let apiURL = `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${req.params.drinkName}`;
     let apiResponse = await axios.get(apiURL);
-    const products = await ReturnMod.find({});
-    const modifiedResponse = await modifyResponse(apiResponse);
+    randomTenList = await Randomizer(apiResponse.data.drinks)
+    const modifiedResponse = await modifyResponse(randomTenList);
     const results = await extrapDetails(modifiedResponse);
     res.send(results);
   } catch (err) {
@@ -147,7 +148,6 @@ async function getDrinkByFizzy(req, res) {
       fizzyDrinks.push(...apiResponse.data.drinks);
     }
     let randomTenList = await Randomizer(fizzyDrinks);
-    console.log(randomTenList)
     const results = await extrapDetails(randomTenList)
     res.status(200).json(results);
   } catch (err) {

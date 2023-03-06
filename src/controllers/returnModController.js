@@ -9,37 +9,37 @@ async function getProducts(req, res) {
     }
 }
 
-// async function rebrandSpirit(req, res) {
-//   try {
-//     const { brand, value } = req.body;
-//     const updatedProduct = await ReturnMod.findByIdAndUpdate(req.params.id, {
-//       [brand]: value,
-//     });
-//     res.json(updatedProduct);
-//   } catch (err) {
-//     res.status(500).json({message: "Error occured"});
-//   }
-// }
 
 async function rebrandSpirit(req, res) {
   try {
-    const { vodka, white_rum, dark_rum, scotch, bourbon, tequila, gin } =
-      req.body;
+    const { fieldName, fieldValue } = req.body;
     const updatedProduct = await ReturnMod.findByIdAndUpdate(req.params.id.trim(), {
-      vodka,
-      white_rum,
-      dark_rum,
-      scotch,
-      bourbon,
-      tequila,
-      gin,
+      [fieldName]: fieldValue
     });
     res.json(updatedProduct);
   } catch (err) {
-    console.log(err)
-    res.status(500).json({message: "Error occured"});
+    res.status(500).json({message: "Error occurred"});
   }
 }
+
+// async function rebrandSpirit(req, res) {
+//   try {
+//     const { vodka, rum, scotch, bourbon, tequila, gin } =
+//       req.body;
+//     const updatedProduct = await ReturnMod.findByIdAndUpdate(req.params.id.trim(), {
+//       vodka,
+//       rum,
+//       scotch,
+//       bourbon,
+//       tequila,
+//       gin,
+//     });
+//     res.json(updatedProduct);
+//   } catch (err) {
+//     console.log(err)
+//     res.status(500).json({message: "Error occured"});
+//   }
+// }
 
 async function addToForbidden(req, res) {
   const { drink } = req.body; 

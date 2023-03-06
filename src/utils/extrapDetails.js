@@ -1,4 +1,5 @@
 const axios = require("axios")
+const modifyResponse = require("./modifyResponse")
 
 async function extrapDetails(initialArray) {
   // Extract drink IDs
@@ -31,8 +32,8 @@ async function extrapDetails(initialArray) {
       ...filteredIngredients,
     };
   });
-
-  return results;
+  // console.log(results)
+  return modifyResponse(results);
 }
 
 module.exports = extrapDetails

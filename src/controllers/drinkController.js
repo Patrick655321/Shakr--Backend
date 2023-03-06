@@ -147,9 +147,11 @@ async function getDrinkByFizzy(req, res) {
       fizzyDrinks.push(...apiResponse.data.drinks);
     }
     let randomTenList = await Randomizer(fizzyDrinks);
+    console.log(randomTenList)
     const results = await extrapDetails(randomTenList)
     res.status(200).json(results);
   } catch (err) {
+    // console.log(err)
     console.log("Error returning drinks");
     res.status(500).json({ message: "Error returning drinks" });
   }

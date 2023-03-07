@@ -11,6 +11,7 @@ async function getAllDrinks(req, res) {
   axios
     .get(apiURL)
     .then((response) => {
+      console.log(response.data.drinks)
       res.status(200).json(response.data);
     })
     .catch((err) => {

@@ -57,7 +57,9 @@ async function getDrinkByBase(req, res) {
     let randomTenList = await Randomizer(baseDrinks);
     console.log(randomTenList)
     const results = await extrapDetails(randomTenList)
-    res.status(200).json(results);
+    ///!!!!!!!!!!!!!!!!!!!!!!!
+    res.status(200).json({drinks: results});
+    // res.status(200).json(results);
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Error returning drinks" });

@@ -96,6 +96,7 @@ async function getDrinkByNonAlc(req, res) {
 }
 
 async function getDrinkByFruity(req, res) {
+  console.log("connection establsihed")
   const fruitUrlList = [
     "https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=Watermelon",
     "https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=Grapefruit_juice",

@@ -22,7 +22,7 @@ const corsOption = {
     optionSuccessStatus: 200
 }
 
-app.use(cors("*"))
+app.use(cors("corsOption"))
 
 const PORT = process.env.PORT || 5000
 

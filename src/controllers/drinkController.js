@@ -4,19 +4,6 @@ const Randomizer = require("../utils/randomizer");
 const modifyResponse = require("../utils/modifyResponse");
 const extrapDetails = require("../utils/extrapDetails");
 
-async function getAllDrinks(req, res) {
-  let apiURL =
-    "https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail";
-  axios
-    .get(apiURL)
-    .then((response) => {
-      console.log(response.data.drinks)
-      res.status(200).json(response.data);
-    })
-    .catch((err) => {
-      res.status(500).json({ message: "internal error" });
-    });
-}
 
 async function getDrinkByName(req, res) {
   req.params.drinkName = req.params.drinkName.replace(/ /g, '_'); //Regex will replace any whitespace in a drink name with an underscore
@@ -24,7 +11,6 @@ async function getDrinkByName(req, res) {
   try {
     let apiResponse = await axios.get(apiURL);
     randomTenList = await Randomizer(apiResponse.data.drinks) //See src/utils/randomizer
-    const modifiedResponse = await modifyResponse(randomTenList);//See src/utils/modifyResponse
     const results = await extrapDetails(modifiedResponse);//See src/utils/extrapDetails
     res.send({drinks: results});//return as json to allow frontend to read
   } catch (err) { //Basic Error handling
@@ -36,8 +22,8 @@ async function getDrinkByBase(req, res) {
   let apiUrl = `http://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${req.params.drinkBase}`; //Dynamic route to allow different bases to use route
   try {
     let baseDrinks = []; //Create empty array in which to store response
-    const apiResponse = await axios.get(apiUrl); //retrieve data from cocktaildb, store in variable
-    baseDrinks.push(...apiResponse.data); //add drinks to baseDrinks array
+    const apiResponse = await axios.get(apiUrl) //retrieve data from cocktaildb, store in variable
+    baseDrinks.push(...apiResponse.data.drinks); //add drinks to baseDrinks array
     let randomTenList = await Randomizer(baseDrinks); //see src/utils/Randomizer
     const results = await extrapDetails(randomTenList)
     res.status(200).json({drinks: results});

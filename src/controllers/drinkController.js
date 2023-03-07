@@ -4,6 +4,22 @@ const Randomizer = require("../utils/randomizer");
 const modifyResponse = require("../utils/modifyResponse");
 const extrapDetails = require("../utils/extrapDetails");
 
+<<<<<<< HEAD
+=======
+async function getAllDrinks(req, res) {
+  let apiURL =
+    "https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail";
+  axios
+    .get(apiURL)
+    .then((response) => {
+      console.log(response.data.drinks)
+      res.status(200).json(response.data);
+    })
+    .catch((err) => {
+      res.status(500).json({ message: "internal error" });
+    });
+}
+>>>>>>> 381e28b54d2b93692a48a457c75cfef550093034
 
 async function getDrinkByName(req, res) {
   req.params.drinkName = req.params.drinkName.replace(/ /g, '_'); //Regex will replace any whitespace in a drink name with an underscore

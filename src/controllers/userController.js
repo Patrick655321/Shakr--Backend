@@ -8,6 +8,7 @@ async function loginAdmin(req, res) {
     const {email, password} = req.body
     try {
         const existingUser = await User.findOne({email: email})
+        console.log(existingUser.password)
         if(!existingUser) {
             return res.status(400).json({message: "Invalid User"})
         }

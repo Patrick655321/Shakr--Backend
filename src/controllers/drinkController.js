@@ -1,17 +1,16 @@
 const axios = require("axios");
 
 const Randomizer = require("../utils/randomizer");
-const modifyResponse = require("../utils/modifyResponse");
 const extrapDetails = require("../utils/extrapDetails");
 
 
 async function getDrinkByName(req, res) {
-  req.params.drinkName = req.params.drinkName.replace(/ /g, '_'); //Regex will replace any whitespace in a drink name with an underscore
+  req.params.drinkName = req.params.drinkName.replace(/ /g, '_');//Regex will replace any whitespace in a drink name with an underscore
   const apiURL = `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${req.params.drinkName}`; //dynamic routing allowing for different drink names to use route
   try {
     let apiResponse = await axios.get(apiURL);
     randomTenList = await Randomizer(apiResponse.data.drinks) //See src/utils/randomizer
-    const results = await extrapDetails(modifiedResponse);//See src/utils/extrapDetails
+    const results = await extrapDetails(randomTenList);//See src/utils/extrapDetails
     res.send({drinks: results});//return as json to allow frontend to read
   } catch (err) { //Basic Error handling
     res.status(500).send("Error fetching data, please check spelling and try again");

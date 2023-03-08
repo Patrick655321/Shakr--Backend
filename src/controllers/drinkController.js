@@ -1,7 +1,6 @@
 const axios = require("axios");
 
 const Randomizer = require("../utils/randomizer");
-const modifyResponse = require("../utils/modifyResponse");
 const extrapDetails = require("../utils/extrapDetails");
 
 

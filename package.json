@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "CHOKIDAR_USEPOLLING=true nodemon src/server.js",
-    "start": "CHOKIDAR_USEPOLLING=true nodemon src/server.js"
+    "start": "CHOKIDAR_USEPOLLING=true nodemon src/server.js",
+    "seed": "node seedDB.js"
   },
   "repository": {
     "type": "git",

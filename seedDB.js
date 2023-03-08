@@ -5,12 +5,18 @@ const ReturnMods = require('./src/models/ReturnMods')
 
 const MONGODB_URI = 'mongodb://localhost:27017/shkr_db';
 
-// connect to MongoDB
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
         console.log('Connected to MongoDB');
-        seedUserDatabase();
-        seedModDatabase();
+        Promise.all([seedUserDatabase(), seedModDatabase()])
+            .then(() => {
+                console.log('Database seeded successfully');
+                mongoose.connection.close();
+            })
+            .catch(error => {
+                console.error('Error seeding database', error);
+                mongoose.connection.close();
+            });
     })
     .catch(error => console.error('Error connecting to MongoDB', error));
 
@@ -36,11 +42,9 @@ async function seedUserDatabase() {
         // save the new users to the database
         await User.insertMany(users);
 
-        console.log('Database seeded successfully');
     } catch (error) {
-        console.error('Error seeding database', error);
-    } finally {
-        // close the MongoDB connection
+        console.error('Error seeding User database', error);
+        throw error;
     }
 }
 
@@ -64,10 +68,9 @@ async function seedModDatabase() {
     
         // save the new return mods to the database
         await ReturnMods.insertMany(returnMods);
-        console.log('ReturnMods database seeded successfully');
+        
       } catch (error) {
         console.error('Error seeding ReturnMods database', error);
-     } finally {
-
-      }
-    }
+        throw error;
+     }
+}

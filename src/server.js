@@ -19,7 +19,7 @@ const mongoURI = process.env.MONGO_URI
 const PORT = process.env.PORT || 5000
 
 app.get("/", (req, res) => {
-    res.send("Welcome to my API")
+    res.status(200).send("Welcome to my API")
 })
 
 app.use(require("./routes/userRoutes"))

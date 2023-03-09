@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}))
 
 const corsOption = {
-    origin: ["*"], //Origin that we want to accept (our frontend)
+    origin: "*", //Origin that we want to accept (our frontend)
     optionSuccessStatus: 200
 }
 

@@ -16,8 +16,8 @@ async function takeForbidden(array) {
 
 async function getRandomTen(array) {
   const newArray = await takeForbidden(array)
-  // console.log(newArray)
-  if (array.length < 10) {
+  // console.log(array)
+  if (array.length < 5) {
     return array;
   }
 
@@ -25,7 +25,7 @@ async function getRandomTen(array) {
   let i = 0;
   do {
     let index = randomizer(array);
-    if (!randomIndexes.includes(index) && randomIndexes.length <= 9) {
+    if (!randomIndexes.includes(index) && randomIndexes.length <= 4) {
       randomIndexes.push(index);
     }
     i++;

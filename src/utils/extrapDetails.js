@@ -1,10 +1,30 @@
 const axios = require("axios")
-const modifyResponse = require("./modifyResponse")
+const ReturnMod = require("../models/ReturnMods")
+
+
+async function modifyResponse(extrapFeed) {
+  const products = await ReturnMod.find({});
+  const modifiedResponse = extrapFeed.map((drink) => {
+      for (const keyProd in products[0]) {
+        for (const drinkKey in drink) {
+          if (keyProd.toLowerCase() == `${drink[drinkKey]}`.toLowerCase()) {
+            if (
+              drink[drinkKey].toLowerCase() !=
+              products[0][keyProd].toLowerCase()
+            ) {
+              drink[drinkKey] = products[0][keyProd];
+            }
+          }
+        }
+      }
+      return drink;
+    });
+    return modifiedResponse;
+  }
 
 async function extrapDetails(initialArray) {
   // Extract drink IDs
   const drinkIds = initialArray.map((drink) => drink.idDrink);
-
   // Fetch details for each drink ID
   const allDrinks = await Promise.all(
     drinkIds.map((id) =>
@@ -32,7 +52,6 @@ async function extrapDetails(initialArray) {
       ...filteredIngredients,
     };
   });
-  // console.log(results)
   return modifyResponse(results);
 }
 

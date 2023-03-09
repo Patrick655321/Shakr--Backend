@@ -2,8 +2,8 @@ const axios = require("axios");
 
 const Randomizer = require("../utils/randomizer");
 const extrapDetails = require("../utils/extrapDetails");
-const { response } = require("express");
 
+const { fruitList, spiritList, fizzList } = require("../utils/arrayInfo")
 
 async function getDrinkByName(req, res) {
   req.params.drinkName = req.params.drinkName.trim().replace(/ /g, '_');//Regex will replace any whitespace in a drink name with an underscore
@@ -51,22 +51,6 @@ async function getDrinkByNonAlc(req, res) {
 }
 
 async function getDrinkByFruity(req, res) {
-  const fruitList = [
-    "Watermelon",
-    "Grapefruit_juice",
-    "Pineapple_juice",
-    "Strawberries",
-    "Mango",
-    "Cantaloupe",
-    "Berries",
-    "Grape_juice",
-    "Kiwi",
-    "Orange",
-    "Cranberry_juice",
-    "Peach_nectar",
-    "Midori_melon_liqueur",
-    "Creme_de_Cassis",
-  ];
   try {
     const allFruity = await Promise.all(
       fruitList.map((fruit) =>
@@ -82,7 +66,7 @@ async function getDrinkByFruity(req, res) {
     });
     let randomTenList = await Randomizer(fruityDrinks);
     const results = await extrapDetails(randomTenList)
-    res.json({ drinks: results });
+    res.json({ drinks: results});
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -90,18 +74,7 @@ async function getDrinkByFruity(req, res) {
 }
 
 async function getDrinkByFizzy(req, res) {
-  const fizzList = [
-    "Champagne",
-    "Carbonated_water",
-    "Lemonade",
-    "Sprite",
-    "7-Up",
-    "coca-cola",
-    "soda_water",
-    "prosecco",
-    "ginger_beer",
-    "Club_soda",
-  ];
+
   try {
     const allFizz = await Promise.all(
       fizzList.map((fizz) => {
@@ -127,23 +100,6 @@ async function getDrinkByFizzy(req, res) {
 async function getDrinkByHeavy(req, res) {
   const apiUrl =
     "https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail";
-  const spiritList = [
-    "Vodka",
-    "Gin",
-    "Cachaca",
-    "Aperol",
-    "Tequila",
-    "Light rum",
-    "Dark Rum",
-    "Scotch",
-    "Bourbon",
-    "Brandy",
-    "Blended Whiskey",
-    "Rum",
-    "Cognac",
-    "Whiskey",
-    "Pisco",
-  ];
 
   try {
     // Get all cocktail drinks

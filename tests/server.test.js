@@ -14,27 +14,37 @@ afterAll(async() => {
 });
 
 
-//Testing homepage
-// describe("Test homepage", () => {
-//     it("shows welcome message", async() => {
-//         const response = await request(app).get("/")
-//         expect(response.statusCode).toBe(200)
-//         expect(response.text).toEqual(expect.stringContaining("Welcome"))
-//     })
-// })
+// Testing homepage
+describe("Test homepage", () => {
+    it("shows welcome message", async() => {
+        const response = await request(app).get("/")
+        expect(response.statusCode).toBe(200)
+        expect(response.text).toEqual(expect.stringContaining("Welcome"))
+    })
+})
 
-// describe("test getDrinkByName", () => {
-//     it("each object in the array contains a key-value pair where strDrink contains 'margarita'", async() => {
-//         const response = await request(app).get("/drinks/name/margarita")
-//         const { drinks } = await response.body; 
-//         expect(response.statusCode).toBe(200)
-//         expect(Array.isArray(drinks)).toBe(true);
-//         expect(response.body.drinks.length).toBeLessThanOrEqual(5);
-//         drinks.forEach(drink => {
-//             expect(drink.strDrink.toLowerCase()).toContain("margarita");
-//         });
-//     })
-// })
+describe("test getDrinkByName", () => {
+    it("each object in the array contains a key-value pair where strDrink contains 'margarita'", async() => {
+        const response = await request(app).get("/drinks/name/margarita")
+        const { drinks } = await response.body; 
+        expect(response.statusCode).toBe(200)
+        expect(Array.isArray(drinks)).toBe(true);
+        expect(response.body.drinks.length).toBeLessThanOrEqual(5);
+        drinks.forEach(drink => {
+            expect(drink.strDrink.toLowerCase()).toContain("margarita");
+        });
+      });
+    })
+
+    describe("testing sensitivity of name search", () => {
+      it("Checking that search params accept whitespace and are NOT case sensitive", async() => {
+        const response = await request(app).get("/drinks/name/OLD fasHIOned ")
+        const { drinks } = await response.body;
+        drinks.forEach(drink => {
+          expect(drink.strDrink.toLowerCase()).toContain("old fashioned");
+      })
+    })
+  })
 
 describe("test getDrinkByBase", () => {
     it("Check to see if every object returned contains at least one ingredient that is 'vodka'", async() => {

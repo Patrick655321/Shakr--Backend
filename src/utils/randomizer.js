@@ -16,24 +16,24 @@ async function takeForbidden(array) {
 
 async function getRandomTen(array) {
   const newArray = await takeForbidden(array)
-  // console.log(array)
-  if (array.length < 5) {
-    return array;
+  if (newArray.length < 5) {
+    return newArray;
   }
 
   let randomIndexes = [];
   let i = 0;
   do {
-    let index = randomizer(array);
+    let index = randomizer(newArray);
     if (!randomIndexes.includes(index) && randomIndexes.length <= 4) {
       randomIndexes.push(index);
     }
     i++;
-  } while (i < array.length);
+  } while (i < newArray.length);
 
   const finalArray = randomIndexes.map((i) => {
-    return array[i];
+    return newArray[i];
   });
+  console.log(finalArray)
   return finalArray;
 }
 

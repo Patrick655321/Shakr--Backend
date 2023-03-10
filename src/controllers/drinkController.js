@@ -14,7 +14,6 @@ async function getDrinkByName(req, res) {
     const results = await extrapDetails(randomTenList);//See src/utils/extrapDetails
     res.send({drinks: results});//return as json to allow frontend to read
   } catch (err) { //Basic Error handling
-    console.log(err)
     res.status(500).send("Error fetching data, please check spelling and try again");
   }
 }
@@ -29,7 +28,6 @@ async function getDrinkByBase(req, res) {
     const results = await extrapDetails(randomTenList)
     res.status(200).json({drinks: results});
   } catch (err) {
-    console.log(err);
     res.status(500).json({ message: "Error returning drinks, please check connection and try again" });
   }
 }
@@ -67,23 +65,21 @@ async function getDrinkByFruity(req, res) {
     let randomTenList = await Randomizer(fruityDrinks);
     const results = await extrapDetails(randomTenList)
     res.json({ drinks: results});
-  } catch (error) {
-    console.error(error);
+  } catch (error) {;
     res.status(500).json({ error: "Internal Server Error" });
   }
 }
 
 async function getDrinkByFizzy(req, res) {
-
   try {
-    const allFizz = await Promise.all(
-      fizzList.map((fizz) => {
+    const allFizzy = await Promise.all(
+      fizzList.map((fizz) =>
       axios.get(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${fizz}`)
-  })
-    )
+  )
+    );
     const fizzDrinks = [];
-    allFizz.forEach((res) => {
-      const drinks = res.data.drinks || [];
+    allFizzy.forEach((response) => {
+      const drinks = response.data.drinks || [];
       drinks.forEach((drink) => {
         fizzDrinks.push(drink);
       })
@@ -92,7 +88,7 @@ async function getDrinkByFizzy(req, res) {
     const results = await extrapDetails(randomTenList)
     res.json({ drinks: results });
   } catch (err) {
-    console.log("Error returning drinks");
+    console.log(err)
     res.status(500).json({ message: "Error returning drinks" });
   }
 }
@@ -131,7 +127,6 @@ async function getDrinkByHeavy(req, res) {
     const results = await extrapDetails(randomTenList)
     res.status(200).json({drinks: results});
   } catch (err) {
-    console.log(err);
     res.status(500).json({ message: "sucks to be you" });
   }
 }

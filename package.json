@@ -4,7 +4,7 @@
   "description": "Backend for T3iiA2-B",
   "main": "index.js",
   "scripts": {
-    "test": "jest --detectOpenHandles",
+    "test": "jest --watchAll --no-cache --detectOpenHandles",
     "start": "CHOKIDAR_USEPOLLING=true nodemon src/index.js",
     "seed": "node seedDB.js"
   },

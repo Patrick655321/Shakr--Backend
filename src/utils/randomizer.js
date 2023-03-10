@@ -33,7 +33,6 @@ async function getRandomTen(array) {
   const finalArray = randomIndexes.map((i) => {
     return newArray[i];
   });
-  console.log(finalArray)
   return finalArray;
 }
 

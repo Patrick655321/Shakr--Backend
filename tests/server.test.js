@@ -1,12 +1,11 @@
 const request = require("supertest")
 const { app } = require("../src/server")
 const mongoose = require("mongoose")
-const mongoURI = require("../src/server")
 const ReturnMod = require("../src/models/ReturnMods")
 
 const { fruitList, spiritList, fizzList } = require("../src/utils/arrayInfo")
 
-const cleanString = (str) => str.toLowerCase().replace(/[^a-z0-9 ]+/g, '').trim();
+const cleanString = (str) => str.toLowerCase().replace(/_/g, ' ').replace(/[^a-z0-9]+/g, '').trim();
 
 beforeAll(async() => {
   await mongoose.connect("mongodb://127.0.0.1/shkr_db")
@@ -72,10 +71,10 @@ describe("GET /drinks/fruity", () => {
     const { drinks } = await response.body;
     const formattedFruitList = fruitList.map((value) => cleanString(value.replace('_', ' ')));
     const filteredDrinks = drinks.filter((drink) =>
-      Object.values(drink).map((value) => cleanString(value)).some(
-        (value) => formattedFruitList.includes(value)
-      )
-    );
+  Object.values(drink).map((value) => cleanString(value)).some(
+    (value) => formattedFruitList.includes(value)
+  )
+);
     console.log(drinks)
   console.log(fruitList)
   console.log(filteredDrinks)
@@ -140,3 +139,4 @@ describe("GET /drinks/heavy", () => {
   expect(ingredient4Check).toHaveLength(0)
 })
 })
+

@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}))
 
 const corsOption = {
-    origin: ["http://localhost:5000", "https://shkrapp.netlify.app/"], //Origin that we want to accept (our frontend)
+    origin: ["http://localhost:3000", "https://shkrapp.netlify.app"], //Origin that we want to accept (our frontend)
     optionSuccessStatus: 200
 }
 

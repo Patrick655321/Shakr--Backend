@@ -5,9 +5,9 @@ const moment = require("moment")
 const User = require("../models/User")
 
 async function loginAdmin(req, res) {
-    const {email, password} = req.body
+    const {username, password} = req.body
     try {
-        const existingUser = await User.findOne({email: email})
+        const existingUser = await User.findOne({username: username})
         console.log(existingUser.password)
         if(!existingUser) {
             return res.status(400).json({message: "Invalid User"})
@@ -20,7 +20,7 @@ async function loginAdmin(req, res) {
         res.json({token})
     } catch (error) {
         res.status(500).json({message: "Internal server error, please try again"})
-    }
+    }
 }
 
 function checkAge(req, res) {

@@ -76,6 +76,9 @@ describe("GET /drinks/fruity", () => {
         (value) => formattedFruitList.includes(value)
       )
     );
+    console.log(drinks)
+  console.log(fruitList)
+  console.log(filteredDrinks)
     expect(response.statusCode).toBe(200)
     expect(Array.isArray(drinks)).toBe(true);
     expect(response.body.drinks.length).toBeLessThanOrEqual(5)
@@ -93,9 +96,6 @@ describe("GET /drinks/fizzy", () => {
           (value) => formattedFizzList.includes(value)
         )
       );
-      console.log(drinks)
-      console.log(formattedFizzList)
-      console.log(filteredDrinks)
       expect(response.statusCode).toBe(200)
       expect(Array.isArray(drinks)).toBe(true);
       expect(response.body.drinks.length).toBeLessThanOrEqual(5)
@@ -117,5 +117,26 @@ describe("GET /drinks/non-alc", () => {
   expect(Array.isArray(drinks)).toBe(true);
   expect(response.body.drinks.length).toBeLessThanOrEqual(5)
   expect(filteredDrinks).toHaveLength(0)
+})
+})
+
+describe("GET /drinks/heavy", () => {
+  it("Ensure every drink in the returned array has an ingredient from the spiritList array and that no drink contains more than 3 ingredients", async() => {
+    const response = await request(app).get("/drinks/heavy")
+    const { drinks } = await response.body;
+    const formattedSpiritList = spiritList.map((value) => cleanString(value.replace('_', ' ')));
+    const filteredDrinks = drinks.filter((drink) =>
+      Object.values(drink).map((value) => cleanString(value)).some(
+        (value) => formattedSpiritList.includes(value)
+      )
+    );
+    const ingredient4Check = drinks.filter((drink) =>
+  drink.hasOwnProperty('strIngredient4')
+);
+  expect(response.statusCode).toBe(200)
+  expect(Array.isArray(drinks)).toBe(true);
+  expect(response.body.drinks.length).toBeLessThanOrEqual(5)
+  expect(filteredDrinks.length).toBeGreaterThan(0)
+  expect(ingredient4Check).toHaveLength(0)
 })
 })

@@ -14,7 +14,7 @@ async function takeForbidden(array) {
   return allowed
 }
 
-async function getRandomTen(array) {
+async function getRandomFive(array) {
   const newArray = await takeForbidden(array)
   if (newArray.length < 5) {
     return newArray;
@@ -36,4 +36,4 @@ async function getRandomTen(array) {
   return finalArray;
 }
 
-module.exports = getRandomTen;
+module.exports = getRandomFive;

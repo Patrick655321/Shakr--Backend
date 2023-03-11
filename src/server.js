@@ -1,9 +1,11 @@
 require ("dotenv").config()
 const express = require("express")
 const cors = require("cors")
-
+const helmet = require("helmet")
 
 const app = express();
+
+app.use(helmet())
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}))
@@ -13,9 +15,8 @@ const corsOption = {
     optionSuccessStatus: 200
 }
 
-app.use(cors( corsOption))
+app.use(cors(corsOption))
 
-const mongoURI = process.env.MONGO_URI
 const PORT = process.env.PORT || 5000
 
 app.get("/", (req, res) => {
@@ -28,6 +29,5 @@ app.use(require("./routes/returnModsRoutes"))
 
 module.exports = {
     app,
-    PORT,
-    mongoURI
+    PORT
 }

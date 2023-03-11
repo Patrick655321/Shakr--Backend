@@ -14,20 +14,16 @@ async function rebrandSpirit(req, res) {
   try {
     const products = await ReturnMod.find({});
     const id = products[0]._id
-    const { fieldName, fieldValue } = req.body;
-    console.log('fieldName:', fieldName);
-    console.log('fieldValue:', fieldValue);
+    const { spiritName, newBrand } = req.body;
     const query = { _id: id }
     const options = { new: true }; // optional options object to return the updated document instead of the original
     const updatedProduct = await ReturnMod.findByIdAndUpdate(
       query, {
-        [fieldName]: fieldValue,
+        [spiritName]: newBrand,
       }, options
     );
-    console.log(updatedProduct)
     res.json(updatedProduct);
   } catch (err) {
-    console.log(err);
     res.status(500).json({ message: "Error occurred" });
   }
 }

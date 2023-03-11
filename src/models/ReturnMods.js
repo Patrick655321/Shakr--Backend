@@ -7,7 +7,8 @@ const ReturnModSchema = new mongoose.Schema({
     bourbon: String,
     tequila: String,
     gin: String,
-    forbidden: Array
+    forbidden: Array,
+    test_spirit: String,
 }, { versionKey: false })
 
 const ReturnMod = mongoose.model("return_mods", ReturnModSchema)

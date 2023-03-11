@@ -33,6 +33,10 @@ async function addToForbidden(req, res) {
   const products = await ReturnMod.find({});
   const id = products[0]._id
   const query = { _id: id }; //query to find the return_mods document by its _id
+  const returnMod = await ReturnMod.findOne(query);
+  if (returnMod.forbidden.includes(drink)) {
+    return res.status(400).json({ error: "Drink already forbidden" });
+  }
   const update = { $push: { forbidden: drink } }; // update operation to push the new drink to the forbidden array
   const options = { new: true }; // optional options object to return the updated document instead of the original
 

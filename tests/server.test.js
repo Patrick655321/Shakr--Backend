@@ -4,6 +4,7 @@ const mongoose = require("mongoose")
 const ReturnMod = require("../src/models/ReturnMods")
 
 const { fruitList, spiritList, fizzList } = require("../src/utils/arrayInfo")
+const { post } = require("../src/routes/userRoutes")
 
 const cleanString = (str) => str.toLowerCase().replace(/_/g, ' ').replace(/[^a-z0-9]+/g, '').trim();
 
@@ -15,11 +16,6 @@ afterAll(async () => {
   await mongoose.connection.close()
   await new Promise(resolve => setTimeout(() => resolve(), 100))
 })
-
-// afterAll(async() => {
-//   await mongoose.connection.close()
-// });
-
 
 describe("GET localhost:5000", () => {
     it("shows welcome message", async() => {
@@ -75,9 +71,6 @@ describe("GET /drinks/fruity", () => {
     (value) => formattedFruitList.includes(value)
   )
 );
-    console.log(drinks)
-  console.log(fruitList)
-  console.log(filteredDrinks)
     expect(response.statusCode).toBe(200)
     expect(Array.isArray(drinks)).toBe(true);
     expect(response.body.drinks.length).toBeLessThanOrEqual(5)
@@ -140,3 +133,40 @@ describe("GET /drinks/heavy", () => {
 })
 })
 
+describe("PUT /products/swap", () => {
+  it("swaps brands out", async() => {
+    const response = await request(app).put("/products/brand/swap")
+    .send({
+      spiritName: "test_spirit",
+      newBrand: "Old Mate Patty's Mountain Moonshine!"
+    })
+    expect(response.statusCode).toBe(200)
+    expect(response.body.test_spirit).toEqual("Old Mate Patty's Mountain Moonshine!")
+  })
+})
+
+describe("POST /products/forbidden/add", () => {
+  it("add item to forbidden array", async() => {
+    const response = await request(app)
+    .post("/products/forbidden/add")
+    .send({
+      drink: "Rocket fuel"
+    });
+    expect(response.statusCode).toBe(200);
+    expect(response.body.forbidden[response.body.forbidden.length - 1]).toEqual("Rocket fuel")
+    const failResponse = await request(app)
+      .post("/products/forbidden/add")
+      .send({ drink: "Rocket fuel"});
+    expect(failResponse.status).toBe(400)
+  })
+})
+
+describe("PATCH /products/forbidden/remove", () => {
+  it("remove item from forbidden array", async() => {
+    const response = await request(app).patch("/products/forbidden/remove")
+    .send({
+      drink: "Martini"
+    })
+    expect(response.statusCode).toBe(200);
+    expect(response.body.forbidden.includes("Martini")).toBe(false)
+  })})

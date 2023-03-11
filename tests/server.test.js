@@ -6,6 +6,8 @@ const ReturnMod = require("../src/models/ReturnMods")
 
 const { fruitList, spiritList, fizzList } = require("../src/utils/arrayInfo")
 
+const cleanString = (str) => str.toLowerCase().replace(/[^a-z0-9 ]+/g, '').trim();
+
 beforeAll(async() => {
   await mongoose.connect("mongodb://127.0.0.1/shkr_db")
 });
@@ -68,24 +70,52 @@ describe("GET /drinks/fruity", () => {
   it("Ensure every drink in the returned array has an ingredient from the fruitList array", async() => {
     const response = await request(app).get("/drinks/fruity")
     const { drinks } = await response.body;
+    const formattedFruitList = fruitList.map((value) => cleanString(value.replace('_', ' ')));
     const filteredDrinks = drinks.filter((drink) =>
-    fruitList.includes(drink.ingredient)
-  );
+      Object.values(drink).map((value) => cleanString(value)).some(
+        (value) => formattedFruitList.includes(value)
+      )
+    );
     expect(response.statusCode).toBe(200)
     expect(Array.isArray(drinks)).toBe(true);
     expect(response.body.drinks.length).toBeLessThanOrEqual(5)
-    expect(filteredDrinks).toHaveLength(0)
+    expect(filteredDrinks).toHaveLength(5)
   })
 })
 
 describe("GET /drinks/fizzy", () => {
-  it("Ensure every drink returned in the array has an ingredient from the fizzList array", async() => {
     it("Ensure every drink in the returned array has an ingredient from the fruitList array", async() => {
-      const response = await request(app).get("/drinks/fruity")
+      const response = await request(app).get("/drinks/fizzy")
       const { drinks } = await response.body;
+      const formattedFizzList = fizzList.map((value) => cleanString(value.replace('_', ' ')));
       const filteredDrinks = drinks.filter((drink) =>
-      fizzList.includes(drink.ingredient)
-    );
+        Object.values(drink).map((value) => cleanString(value)).some(
+          (value) => formattedFizzList.includes(value)
+        )
+      );
+      console.log(drinks)
+      console.log(formattedFizzList)
+      console.log(filteredDrinks)
+      expect(response.statusCode).toBe(200)
+      expect(Array.isArray(drinks)).toBe(true);
+      expect(response.body.drinks.length).toBeLessThanOrEqual(5)
+      expect(filteredDrinks).toHaveLength(5)
   })
+})
+
+describe("GET /drinks/non-alc", () => {
+  it("Ensure every drink in the returned array has an ingredient from the fruitList array", async() => {
+    const response = await request(app).get("/drinks/non-alc")
+    const { drinks } = await response.body;
+    const formattedSpiritList = spiritList.map((value) => cleanString(value.replace('_', ' ')));
+    const filteredDrinks = drinks.filter((drink) =>
+      Object.values(drink).map((value) => cleanString(value)).some(
+        (value) => formattedSpiritList.includes(value)
+      )
+    );
+  expect(response.statusCode).toBe(200)
+  expect(Array.isArray(drinks)).toBe(true);
+  expect(response.body.drinks.length).toBeLessThanOrEqual(5)
+  expect(filteredDrinks).toHaveLength(0)
 })
 })

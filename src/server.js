@@ -17,12 +17,12 @@ app.use(express.urlencoded({ extended: true }));
 
 // Defining CORS options
 const corsOption = {
-  origin: "*", //Origin that we want to accept (our frontend)
+  origin: ["http://localhost:3000", "https://shkrapp.netlify.app/"], //Origin that we want to accept (our frontend)
   optionSuccessStatus: 200,
 };
 
 // Applying CORS middleware to app
-app.use(cors(corsOption));
+app.use(cors("https://shkrapp.netlify.app/"));
 
 // Defining port to listen on
 const PORT = process.env.PORT || 5000;

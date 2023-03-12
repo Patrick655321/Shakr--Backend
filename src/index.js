@@ -1,14 +1,10 @@
 const mongoose = require("mongoose")
-const { app, PORT, mongoURI } = require("./server")
+const { app, PORT } = require("./server")
 
 app.listen(PORT, () => {
     console.log("Server Started")
     mongoose.set('strictQuery', false)
-    mongoose.connect(mongoURI)
-    .then(() => {
+    mongoose.connect(process.env.MONGO_URI, () => {
         console.log("DB connected")
-    })
-    .catch((err) => {
-        console.log(err)
     })
 })

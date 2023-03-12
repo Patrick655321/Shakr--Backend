@@ -5,7 +5,7 @@ const {rebrandSpirit, getProducts, addToForbidden, removeForbiddenItem } = requi
 const returnModRouter = express.Router()
 
 returnModRouter.get("/products", getProducts)
-returnModRouter.put("/products/brand/:id", rebrandSpirit)
+returnModRouter.put("/products/brand/swap", rebrandSpirit)
 returnModRouter.post("/products/forbidden/add", addToForbidden)
 returnModRouter.patch("/products/forbidden/remove", removeForbiddenItem)
 

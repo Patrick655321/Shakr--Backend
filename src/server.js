@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Defining CORS options
 const corsOption = {
-  origin: "https://shkrapp.netlify.app/", //Origin that we want to accept (our frontend)
+  origin: "*", //Origin that we want to accept (our frontend)
   optionSuccessStatus: 200,
 };
 

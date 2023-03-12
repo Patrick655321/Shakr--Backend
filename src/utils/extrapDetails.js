@@ -32,7 +32,7 @@ async function modifyResponse(extrapFeed) {
 async function extrapDetails(initialArray) {
   // Extract drink IDs
   const drinkIds = initialArray.map((drink) => drink.idDrink);
-  
+
   // Fetch details for each drink ID using Promise.all
   const allDrinks = await Promise.all(
     drinkIds.map((id) =>
@@ -51,7 +51,7 @@ async function extrapDetails(initialArray) {
     // Find the details object that matches the drink ID
     const details = allDrinks.find((d) => d.idDrink === drink.idDrink);
     const { strDrink, strInstructions, strDrinkThumb } = drink;
-    
+
     // Filter out null and empty ingredient measurements, and only keep relevant keys
     const filteredIngredients = Object.fromEntries(
       Object.entries(details).filter(
@@ -63,7 +63,7 @@ async function extrapDetails(initialArray) {
           key === "strDrinkThumb"
       )
     );
-    
+
     // Merge the filtered ingredients with the initial drink object
     return {
       strDrink,
@@ -72,7 +72,7 @@ async function extrapDetails(initialArray) {
       ...filteredIngredients,
     };
   });
-  
+
   // Modify the response to match the expected format
   return modifyResponse(results);
 }

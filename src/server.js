@@ -22,7 +22,7 @@ const corsOption = {
 };
 
 // Applying CORS middleware to app
-app.use(cors("https://shkrapp.netlify.app/"));
+app.use(cors(corsOption));
 
 // Defining port to listen on
 const PORT = process.env.PORT || 5000;

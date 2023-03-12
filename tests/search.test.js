@@ -22,7 +22,7 @@ afterAll(async () => {
 });
 
 // This test suite checks the response for the GET request to the root path
-describe("GET localhost:5000", () => {
+describe("GET host:5000", () => {
   // This test case checks if the response contains the welcome message
   it("shows welcome message", async () => {
     const response = await request(app).get("/");

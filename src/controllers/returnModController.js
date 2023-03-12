@@ -58,9 +58,13 @@ async function addToForbidden(req, res) {
 }
 
 async function removeForbiddenItem(req, res) {
+    
     const products = await ReturnMod.find({});
     const id = products[0]._id;
     const { drink } = req.body;
+    console.log(drink + "removing drink");
+    console.log(id + "drink id");
+
     const query = { _id: id };
     const update = { $pull: { forbidden: drink } };
     const options = { new: true };
@@ -69,10 +73,11 @@ async function removeForbiddenItem(req, res) {
         const updatedReturnMods = await ReturnMod.findOneAndUpdate(
             query,
             update,
-            options,
+            options
         );
-        // res.json(updatedReturnMods);????
-        res.send(drink);
+        console.log(updatedReturnMods + "updated return mods");
+        res.json(updatedReturnMods);
+        // res.send(drink);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal Server Error" });
@@ -80,11 +85,13 @@ async function removeForbiddenItem(req, res) {
 }
 
 async function getAllForbidden(req, res) {
+    console.log("getting all forbidden on the back end");
     try {
-        const cocktailsMess = await ReturnMod.find();
-        const forbiddenCocktails = cocktailsMess[0]["forbidden"]
+        const cocktailsAllTogether = await ReturnMod.find();
+        const forbiddenCocktails = cocktailsAllTogether[0]["forbidden"];
+        console.log("all forbidden cocktails sent from back end")
+        console.log(forbiddenCocktails);
         res.json(forbiddenCocktails);
-        
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: error.message });

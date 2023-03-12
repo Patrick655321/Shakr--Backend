@@ -1,3 +1,4 @@
+//Arrays for use in functions/testing
 const fruitList = [
   "Watermelon",
   "Grapefruit_juice",

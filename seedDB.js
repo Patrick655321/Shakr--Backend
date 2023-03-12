@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const User = require('./src/models/User'); // assuming this is the User model you defined
+const User = require('./src/models/User');
 const ReturnMods = require('./src/models/ReturnMods')
 
 const MONGODB_URI = 'mongodb://localhost:27017/shkr_db';

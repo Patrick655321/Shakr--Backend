@@ -1,5 +1,6 @@
 const ReturnMod = require("../models/ReturnMods");
 
+
 // Function to get a list of products
 async function getProducts(req, res) {
   try {
@@ -88,10 +89,26 @@ async function removeForbiddenItem(req, res) {
     res.status(500).json({ message: "Internal Server Error" });
   }
 }
+
+async function getAllForbidden(req, res) {
+    console.log("getting all forbidden on the back end");
+    try {
+        const cocktailsAllTogether = await ReturnMod.find();
+        const forbiddenCocktails = cocktailsAllTogether[0]["forbidden"];
+        console.log("all forbidden cocktails sent from back end")
+        console.log(forbiddenCocktails);
+        res.json(forbiddenCocktails);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: error.message });
+    }
+}
+
 // export modules to other pages
 module.exports = {
   rebrandSpirit,
   getProducts,
   addToForbidden,
   removeForbiddenItem,
+  getAllForbidden
 };

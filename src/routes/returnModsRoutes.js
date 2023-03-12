@@ -18,5 +18,6 @@ returnModRouter.put("/products/brand/swap", rebrandSpirit); // Route for swappin
 returnModRouter.post("/products/forbidden/add", addToForbidden); // Route for adding an item to the forbidden list
 returnModRouter.patch("/products/forbidden/remove", removeForbiddenItem); // Route for removing an item from the forbidden list
 
+
 // Export the router to be used in the main application
 module.exports = returnModRouter;

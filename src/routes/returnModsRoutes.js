@@ -1,14 +1,23 @@
-const express = require("express")
+// Import the express package
+const express = require("express");
 
-const {rebrandSpirit, getProducts, addToForbidden, removeForbiddenItem, getAllForbidden } = require("../controllers/returnModController")
+// Import the controllers for handling routes
+const {
+  rebrandSpirit,
+  getProducts,
+  addToForbidden,
+  removeForbiddenItem,
+} = require("../controllers/returnModController");
 
-const returnModRouter = express.Router()
+// Create a new router instance
+const returnModRouter = express.Router();
 
-returnModRouter.get("/products", getProducts)
-returnModRouter.put("/products/brand/swap", rebrandSpirit)
-returnModRouter.post("/products/forbidden/add", addToForbidden)
-returnModRouter.get("/products/forbidden/all", getAllForbidden)
-returnModRouter.patch("/products/forbidden/remove", removeForbiddenItem)
+// Define the routes for handling requests
+returnModRouter.get("/products", getProducts); // Route for getting all products
+returnModRouter.put("/products/brand/swap", rebrandSpirit); // Route for swapping spirit brand
+returnModRouter.post("/products/forbidden/add", addToForbidden); // Route for adding an item to the forbidden list
+returnModRouter.patch("/products/forbidden/remove", removeForbiddenItem); // Route for removing an item from the forbidden list
 
 
-module.exports = returnModRouter
+// Export the router to be used in the main application
+module.exports = returnModRouter;

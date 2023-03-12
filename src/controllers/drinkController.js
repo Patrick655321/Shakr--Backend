@@ -1,36 +1,60 @@
+// Importin g required dependencies and functions from files
 const axios = require("axios");
-
 const Randomizer = require("../utils/randomizer");
 const extrapDetails = require("../utils/extrapDetails");
 
-const { fruitList, spiritList, fizzList } = require("../utils/arrayInfo")
+// Importing arrays from arrayInfo file
+const { fruitList, spiritList, fizzList } = require("../utils/arrayInfo");
 
+// Async function to retrieve drink by name
 async function getDrinkByName(req, res) {
-  req.params.drinkName = req.params.drinkName.trim().replace(/ /g, '_');//Regex will replace any whitespace in a drink name with an underscore
-  const apiURL = `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${req.params.drinkName}`; //dynamic routing allowing for different drink names to use route
+  // Modifying parameter by replacing any whitespace in drink name with an underscore
+  req.params.drinkName = req.params.drinkName.trim().replace(/ /g, "_");
+  // API URL with parameterized drink name for dynamic routing
+  const apiURL = `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${req.params.drinkName}`;
   try {
+    // Make request to API using axios
     let apiResponse = await axios.get(apiURL);
-    randomTenList = await Randomizer(apiResponse.data.drinks) //See src/utils/randomizer
-    const results = await extrapDetails(randomTenList);//See src/utils/extrapDetails
-    res.send({drinks: results});//return as json to allow frontend to read
-  } catch (err) { //Basic Error handling
-    res.status(500).send("Error fetching data, please check spelling and try again");
-  }
-}
-
-async function getDrinkByBase(req, res) {
-  let apiUrl = `http://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${req.params.drinkBase}`; //Dynamic route to allow different bases to use route
-  try {
-    let baseDrinks = []; //Create empty array in which to store response
-    const apiResponse = await axios.get(apiUrl) //retrieve data from cocktaildb, store in variable
-    baseDrinks.push(...apiResponse.data.drinks); //add drinks to baseDrinks array
-    let randomTenList = await Randomizer(baseDrinks); //see src/utils/Randomizer
-    const results = await extrapDetails(randomTenList)
-    res.status(200).json({drinks: results});
+    // Retrieve a list of five random drinks from the API response using Randomizer function
+    randomFiveList = await Randomizer(apiResponse.data.drinks);
+    // Add extra details to the list of five drinks using extrapDetails function
+    const results = await extrapDetails(randomFiveList);
+    // Return the result as a JSON object to be read by the frontend
+    res.send({ drinks: results });
   } catch (err) {
-    res.status(500).json({ message: "Error returning drinks, please check connection and try again" });
+    // If an error occurs, send a 500 error status with a relevant error message
+    res
+      .status(500)
+      .send("Error fetching data, please check spelling and try again");
   }
 }
+// Async function to retrieve drink by base
+async function getDrinkByBase(req, res) {
+  // API URL with parameterized drink base for dynamic routing
+  let apiUrl = `http://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${req.params.drinkBase}`;
+  try {
+    let baseDrinks = [];
+    // Make request to API using axios
+    const apiResponse = await axios.get(apiUrl);
+    baseDrinks.push(...apiResponse.data.drinks);
+    // Retrieve a list of five random drinks from the API response using Randomizer function
+    let randomFiveList = await Randomizer(baseDrinks);
+    // Add extra details to the list of five drinks using extrapDetails function
+    const results = await extrapDetails(randomFiveList);
+    // Return the result as a JSON object to be read by the frontend
+    res.status(200).json({ drinks: results });
+  } catch (err) {
+    // If an error occurs, send a 500 error status with a relevant error message
+    res
+      .status(500)
+      .json({
+        message:
+          "Error returning drinks, please check connection and try again",
+      });
+  }
+}
+// All of the functions have essentially the same functionality so for the purposes of readability I
+// only going to comment on where the search functions differ from this point on:
 
 async function getDrinkByNonAlc(req, res) {
   let apiUrl =
@@ -39,9 +63,9 @@ async function getDrinkByNonAlc(req, res) {
     let nonAlcDrinks = [];
     const apiResponse = await axios.get(apiUrl);
     nonAlcDrinks.push(...apiResponse.data.drinks);
-    let randomTenList = await Randomizer(nonAlcDrinks);
-    const results = await extrapDetails(randomTenList)
-    res.status(200).json({drinks: results});
+    let randomFiveList = await Randomizer(nonAlcDrinks);
+    const results = await extrapDetails(randomFiveList);
+    res.status(200).json({ drinks: results });
   } catch (err) {
     console.log("Error returning drinks");
     res.status(500).json({ message: "Error returning drinks" });
@@ -50,22 +74,27 @@ async function getDrinkByNonAlc(req, res) {
 
 async function getDrinkByFruity(req, res) {
   try {
+    // Using Promise.all to make multiple API requests for each fruit in the fruitList array.
     const allFruity = await Promise.all(
       fruitList.map((fruit) =>
-        axios.get(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${fruit}`)
+        axios.get(
+          `https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${fruit}`
+        )
       )
     );
     const fruityDrinks = [];
     allFruity.forEach((response) => {
-      const drinks = response.data.drinks || [];
+      // Looping through each API response to extract the drinks.
+      const drinks = response.data.drinks || []; // Using default value of empty array in case there is no response.
       drinks.forEach((drink) => {
+        // Looping through each drink and adding it to the fruityDrinks
         fruityDrinks.push(drink);
       });
     });
-    let randomTenList = await Randomizer(fruityDrinks);
-    const results = await extrapDetails(randomTenList)
-    res.json({ drinks: results});
-  } catch (error) {;
+    let randomFiveList = await Randomizer(fruityDrinks);
+    const results = await extrapDetails(randomFiveList);
+    res.json({ drinks: results });
+  } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
   }
 }
@@ -74,21 +103,23 @@ async function getDrinkByFizzy(req, res) {
   try {
     const allFizzy = await Promise.all(
       fizzList.map((fizz) =>
-      axios.get(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${fizz}`)
-  )
+        axios.get(
+          `https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${fizz}`
+        )
+      )
     );
     const fizzDrinks = [];
     allFizzy.forEach((response) => {
       const drinks = response.data.drinks || [];
       drinks.forEach((drink) => {
         fizzDrinks.push(drink);
-      })
-    })
-    let randomTenList = await Randomizer(fizzDrinks);
-    const results = await extrapDetails(randomTenList)
+      });
+    });
+    let randomFiveList = await Randomizer(fizzDrinks);
+    const results = await extrapDetails(randomFiveList);
     res.json({ drinks: results });
   } catch (err) {
-    console.log(err)
+    console.log(err);
     res.status(500).json({ message: "Error returning drinks" });
   }
 }
@@ -122,15 +153,13 @@ async function getDrinkByHeavy(req, res) {
         spiritList.some((spirit) => Object.values(drink).includes(spirit))
       );
     });
-    // Randomizer functionality to return random 10
-    let randomTenList = await Randomizer(heavyList);
-    const results = await extrapDetails(randomTenList)
-    res.status(200).json({drinks: results});
+    let randomFiveList = await Randomizer(heavyList);
+    const results = await extrapDetails(randomFiveList);
+    res.status(200).json({ drinks: results });
   } catch (err) {
     res.status(500).json({ message: "sucks to be you" });
   }
 }
-
 
 module.exports = {
   getDrinkByName,

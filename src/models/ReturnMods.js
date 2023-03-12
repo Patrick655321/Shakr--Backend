@@ -1,15 +1,23 @@
-const mongoose = require("mongoose")
+// Importing mongoose module
+const mongoose = require("mongoose");
 
-const ReturnModSchema = new mongoose.Schema({
+// Creating schema for ReturnMod
+const ReturnModSchema = new mongoose.Schema(
+  {
     vodka: String,
     rum: String,
     scotch: String,
     bourbon: String,
     tequila: String,
     gin: String,
-    forbidden: Array
-}, { versionKey: false })
+    forbidden: Array,
+    test_spirit: String,
+  },
+  { versionKey: false }
+);
 
-const ReturnMod = mongoose.model("return_mods", ReturnModSchema)
+// Creating model for ReturnMod with the schema created
+const ReturnMod = mongoose.model("return_mods", ReturnModSchema);
 
-module.exports = ReturnMod
+// Exporting the ReturnMod model
+module.exports = ReturnMod;

@@ -25,7 +25,7 @@ const corsOption = {
 app.use(cors(corsOption));
 
 // Defining port to listen on
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 // Defining route for homepage
 app.get("/", (req, res) => {
@@ -36,7 +36,7 @@ app.get("/", (req, res) => {
 app.use(require("./routes/userRoutes"));
 app.use(require("./routes/drinkRoutes"));
 app.use(require("./routes/returnModsRoutes"));
-
+// this comment is jsut to test git add etc
 // Exporting app and PORT to be used in server.js
 module.exports = {
   app,

@@ -42,8 +42,11 @@ async function addToForbidden(req, res) {
   const query = { _id: id }; // Defines the query to find the ReturnMod document by its _id
   const returnMod = await ReturnMod.findOne(query); // Finds the ReturnMod document that matches the query
 
+  const lowerCaseDrink = drink.toLowerCase()
+  const lowercaseForbidden = returnMod.forbidden.map((item) => item.toLowerCase())
+
   // Checks if the forbidden array in the ReturnMod document already includes the drink to be added
-  if (returnMod.forbidden.includes(drink)) {
+  if (lowercaseForbidden.includes(lowerCaseDrink)) {
     return res.status(400).json({ error: "Drink already forbidden" }); // Returns an error response if the drink is already in the forbidden list
   }
 

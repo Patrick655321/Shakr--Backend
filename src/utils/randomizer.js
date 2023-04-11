@@ -9,9 +9,9 @@ function randomizer(array) {
 //A function that filters out drinks that are in the forbidden list and returns only allowed drinks
 async function takeForbidden(array) {
   const result = await ReturnMod.find({});
-  const forbidden = await result[0].forbidden;
+  const forbidden = await result[0].forbidden.map((item) => item.toLowerCase());
   const allowed = array.filter((i) => {
-    return !forbidden.includes(i.strDrink);
+    return !forbidden.includes(i.strDrink.toLowerCase());
   });
   return allowed;
 }
@@ -28,7 +28,7 @@ async function getRandomFive(array) {
   let i = 0;
   do {
     let index = randomizer(newArray);
-    if (!randomIndexes.includes(index) && randomIndexes.length <= 4) {
+    if (!randomIndexes.includes(index) && randomIndexes.length < 4) {
       randomIndexes.push(index);
     }
     i++;
